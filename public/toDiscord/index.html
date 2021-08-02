@@ -1,0 +1,193 @@
+<html>
+<head>
+	<title>Upload a video to Discord</title>
+	<link rel="stylesheet" href="/toDiscord/style.css">
+
+	<script>
+		var __nspid="isrtzw";
+		var __nsptags=[];
+		(function(w, d) { var x = function() {
+		var j=d.createElement("script");j.type="text/javascript";j.async=true;
+		j.src="http"+("https:"===d.location.protocol?"s://cs":"://c")+".ns1p.net/p.js?a="+__nspid;
+		d.body.appendChild(j); }
+		if(w.addEventListener) { w.addEventListener("load", x, false); }
+		else if(w.attachEvent) { w.attachEvent("onload", x); }
+		else { w.onload = x; }
+		}(window, document));
+	</script>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-N9E9YP1HGF"></script>
+	<script>
+  		window.dataLayer = window.dataLayer || [];
+  		function gtag(){dataLayer.push(arguments);}
+  		gtag('js', new Date());
+  		gtag('config', 'G-N9E9YP1HGF');
+	</script>
+
+</head>
+
+<body>
+	
+	<br>
+	<div id="action__upload">
+		Upload to Discord<br/>
+		<img id="uploadFile__icon" draggable="false" src = "upload.png">
+		<br/>
+		<label for="videoName" id="videoName-label">Video Title:</label> 
+		<input type="text" id="videoName" value= "my video"> <br/>
+		<label for="videoDescription" id="videoDescription-label">Description:</label> 
+		<input type="text" id="videoDescription" value= "watch this cool video"> <br/>
+		<label for="discordChannel" id="discordChannel-label">Discord Channel:</label> 
+		<input type="text" id="discordChannel" value= "781116401800839192"> <br/>
+		<label for="video-file" id="video-file-label">
+			Click here to pick your video
+		</label>
+		<input type="file" id="video-file" style='display:none'>
+
+	</div>
+	<br>	
+	<div id ="information">
+		<div id="video-information" style="width: 50%"></div>
+		<div id="chunk-information" style="width: 50%"></div>
+		<div id="file-update" style="width: 50%"></div>
+	</div>
+	<div id="footer">
+		This app was created with <a href="https://api.video">api.video</a>.<br/>
+		Get the <a href="https://github.com/dougsillars/videoUploadToDiscord">sample code</a>, and read about <a href="https://a.video/works/upload-a-video-to-discord">how we built the demo.</a><br/>
+		More sample apps can be found at <a href="https://a.video">a.video</a>.
+
+	</div>
+	
+	<script>
+	  const input = document.querySelector('#video-file');
+	  const url ="https://sandbox.api.video/upload?token=to1R5LOYV0091XN3GQva27OS";
+	  var chunkCounter =0;
+	  //break into 1 MB chunks for demo purposes
+	  const chunkSize = 1000000;  
+	  var videoId = "";
+	  var playerUrl = "";
+
+	  
+	  input.addEventListener('change', () => {
+	    const file = input.files[0];
+		const filename = input.files[0].name;
+	    var numberofChunks = Math.ceil(file.size/chunkSize);
+		document.getElementById("video-information").innerHTML = "There will be " + numberofChunks + " chunks uploaded."
+		var start =0; 
+		chunkCounter=0;
+		document.getElementById("file-update").innerHTML ="";
+		videoId="";
+		var chunkEnd = start + chunkSize;
+		//upload the first chunk to get the videoId
+		createChunk(videoId, start);
+		
+		
+		
+		function createChunk(videoId, start, end){
+			chunkCounter++;
+			console.log("created chunk: ", chunkCounter);
+			chunkEnd = Math.min(start + chunkSize , file.size );
+			const chunk = file.slice(start, chunkEnd);
+			console.log("i created a chunk of video" + start + "-" + chunkEnd + "minus 1	");
+  		  	const chunkForm = new FormData();
+			if(videoId.length >0){
+				//we have a videoId
+				chunkForm.append('videoId', videoId);
+				console.log("added videoId");	
+				
+			}
+  		  	chunkForm.append('file', chunk, filename);
+			console.log("added file");
+
+			
+			//created the chunk, now upload iit
+			uploadChunk(chunkForm, start, chunkEnd);
+		}
+		
+		function uploadChunk(chunkForm, start, chunkEnd){
+			var oReq = new XMLHttpRequest();
+			oReq.upload.addEventListener("progress", updateProgress);	
+			oReq.open("POST", url, true);
+			var blobEnd = chunkEnd-1;
+			var contentRange = "bytes "+ start+"-"+ blobEnd+"/"+file.size;
+			oReq.setRequestHeader("Content-Range",contentRange);
+			console.log("Content-Range", contentRange);
+  			function updateProgress (oEvent) {
+  			    if (oEvent.lengthComputable) {  
+  			    var percentComplete = Math.round(oEvent.loaded / oEvent.total * 100);
+				
+  				var totalPercentComplete = Math.round((chunkCounter -1)/numberofChunks*100 +percentComplete/numberofChunks);
+  			    document.getElementById("chunk-information").innerHTML = "Chunk # " + chunkCounter + " is " + percentComplete + "% uploaded. Total uploaded: " + totalPercentComplete +"%";
+  			//	console.log (percentComplete);
+  				// ...
+  			  } else {
+  				  console.log ("not computable");
+  			    // Unable to compute progress information since the total size is unknown
+  			  }
+  			}
+			oReq.onload = function (oEvent) {
+			               // Uploaded.
+							console.log("uploaded chunk" );
+							console.log("oReq.response", oReq.response);
+							var resp = JSON.parse(oReq.response)
+							videoId = resp.videoId;
+							//playerUrl = resp.assets.player;
+							console.log("videoId",videoId);
+							
+							//now we have the video ID - loop through and add the remaining chunks
+							//we start one chunk in, as we have uploaded the first one.
+							//next chunk starts at + chunkSize from start
+							start += chunkSize;	
+							//if start is smaller than file size - we have more to still upload
+							if(start<file.size){
+								//create the new chunk
+								createChunk(videoId, start);
+							}
+							else{
+								//the video is fully uploaded. there will now be a url in the response
+								playerUrl = resp.assets.player;
+								console.log("all uploaded! Watch here: ",playerUrl ) ;
+								document.getElementById("video-information").innerHTML = "all uploaded! Watch the video <a href=\'" + playerUrl +"\' target=\'_blank\'>here</a>" ;
+
+
+								//post the video infromation 
+								//now we can add the title and description
+								//and post to Discord
+								
+								var jsonUpload = { "videoId": videoId,
+													"videoName": videoName.value,
+													"videoDesc": videoDescription.value,
+													"channel": discordChannel.value
+													};
+
+								console.log("json", jsonUpload);
+
+								//send form with video information to Node
+								//node will update the video on api.video,
+								//and then send on to the servive
+								var pReq = new XMLHttpRequest();
+								pReq.open("POST", "/toDiscord");
+								pReq.setRequestHeader("Content-type", "application/json");
+								pReq.onload = function (oEvent) {
+									document.getElementById("file-update").innerHTML = "Video Posted";
+								}
+								pReq.send(JSON.stringify(jsonUpload));
+
+							}
+							
+			  };
+			  oReq.send(chunkForm);
+	
+			
+			
+		}
+
+	
+	  });
+	</script>
+	
+	
+	
+</body>
+
+</html>
