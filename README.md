@@ -11,4 +11,4 @@ the primary repositories are at:
 
 ## Changes
 
-August 2021: upload size set to 5 MB segements.
+August 2021: upload size set to 6 MB segements.
