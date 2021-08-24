@@ -58,7 +58,7 @@
 	<script>
 	  const input = document.querySelector('#video-file');
 	  //changed to sandbox, becuase we cannot have nice things
-	  const url ="https://ws.api.video/upload?token=to5PoOjCz98FdLGnsrFflnYo";
+	  const url ="https://ws.api.video/upload?token=toiFZZvCtxqj5z6qCa2O1mU";
 	  var chunkCounter =0;
 	  //break into 1 MB chunks for demo purposes
 	  const chunkSize = 6000000;  
@@ -67,18 +67,33 @@
 
 	  
 	  input.addEventListener('change', () => {
-	    const file = input.files[0];
+		const file = input.files[0];
 		const filename = input.files[0].name;
-	    var numberofChunks = Math.ceil(file.size/chunkSize);
+		var numberofChunks = Math.ceil(file.size/chunkSize);
 		document.getElementById("video-information").innerHTML = "There will be " + numberofChunks + " chunks uploaded."
 		var start =0; 
 		chunkCounter=0;
 		videoId="";
 		var chunkEnd = start + chunkSize;
-		//upload the first chunk to get the videoId
-		createChunk(videoId, start);
+
+	    var qReq = new XMLHttpRequest();
+		qReq.open("GET", "/ratelimit");
+		qReq.onload = function (oEvent) {
+
+			console.log(qReq.status);
+				//once we create the video id do stuff
+				if(qReq.status == 429){
+					//rate limited
+					document.getElementById("video-information").innerHTML = "Your uploads have been rate limited. We allow 5 uploads/hour with this demo app. Please try again in a bit."
+				}
+				else{
+					//upload the first chunk to get the videoId
+					//its ok to upload the video, we are not rate limited
+					createChunk(videoId, start);
 		
-		
+				}
+		}
+		qReq.send();
 		
 		function createChunk(videoId, start, end){
 			chunkCounter++;

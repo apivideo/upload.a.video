@@ -25,6 +25,21 @@ discordClient.once('ready', () => {
 //https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot
 discordClient.login(process.env.discordKey);
 
+//rate limiting code
+//rate limiting to protect the demos
+const rateLimit = require("express-rate-limit");
+app.use(
+	rateLimit({
+	  windowMs:  60 * 60 * 1000, // 1 hour duration in milliseconds
+	  max: 5,
+	  message: "You exceeded 5 requests in 1 hour.",
+	  headers: true,
+	})
+  );
+  
+  
+  
+
 
 
 //apivideo
@@ -33,6 +48,12 @@ const apiVideo = require('@api.video/nodejs-sdk');
 
 //if you chnage the key to sandbox or prod - make sure you fix the delegated toekn on the upload page
 const apiVideoKey = process.env.apiProductionKey;
+
+app.get('/ratelimit',(req,res)=>{
+	console.log("rate limiting test");
+	res.sendStatus(200);
+});
+
 
 // website demo
 //get request is the initial request - load the HTML page with the form

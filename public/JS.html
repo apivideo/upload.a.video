@@ -52,12 +52,34 @@
 	  var playerUrl = "";
 	  input.addEventListener('change', () => {
 		console.log("upload commencing");
-		uploadFile(input.files[0]);
+
+		//adding in rate limiting to prevent abuse
+		var qReq = new XMLHttpRequest();
+		qReq.open("GET", "/ratelimit");
+		qReq.onload = function (oEvent) {
+
+			console.log(qReq.status);
+				//once we create the video id do stuff
+				if(qReq.status == 429){
+					//rate limited
+					document.getElementById("chunk-information").innerHTML = "Your uploads have been rate limited. We allow 5 uploads/hour with this demo app. Please try again in a bit."
+				}
+				else{
+					//upload the first chunk to get the videoId
+					//its ok to upload the video, we are not rate limited
+					uploadFile(input.files[0]);
+		
+				}
+		}
+		qReq.send();
+
+
+		
 		function uploadFile(files) {
 			const uploader = new VideoUploader({
 				file: input.files[0],
 				//changed to sandbox, becuase we cannot have nice things
-				uploadToken: "to5PoOjCz98FdLGnsrFflnYo",
+				uploadToken: "toiFZZvCtxqj5z6qCa2O1mU",
 				chunkSize: 1024*1024*10, // 10MB
 				retries: 10
 		    });
