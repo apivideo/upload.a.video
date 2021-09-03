@@ -59,9 +59,9 @@ app.get('/ratelimit',(req,res)=>{
 
 
 app.post('/webhook',(req,res) =>{
-	console.log("body" ,req.body);
+///	console.log("body" ,req.body);
 	var reqBody = JSON.parse(req.body);
-	console.log("reqBody",reqBody);
+///	console.log("reqBody",reqBody);
 	//video uploaded -but check to see if the 
 	var videoId = reqBody.videoId;
 	var videoQuality  = reqBody.quality;
