@@ -74,10 +74,13 @@ app.post('/webhook',(req,res) =>{
 		
 		
 		for(var i=0;i<webhooks.length;i++){
+			
+			/*
 			var webhookEmitted = webhooks[i].emittedAt;
 			//convert this to a date
 			//2021-01-29T16:46:25.217+01:00
 			//year month date
+			console.log("webhookEmitted", webhookEmitted);
 			webhookEmitted = webhookEmitted.slice(0,7);
 			webhookDate = Date.parse(webhookEmitted);
 			console.log( Date.now, webhookDate);
@@ -86,6 +89,7 @@ app.post('/webhook',(req,res) =>{
 				webhooks.splice(i);
 			}
 			else{
+			*/
 				//this is a recent webhook
 				if(webhooks[i].videoId == videoId && webhooks[i].quality == videoQuality){
 					//we have a match!!
@@ -97,7 +101,7 @@ app.post('/webhook',(req,res) =>{
 					console.log("no webhook yet.");
 					setTimeout(checkWebhook,2000,videoId, videoQuality, webhooks);
 				}
-			}
+			//}
 		}
 	}
 	checkWebhook(videoId, videoQuality, webhooks);
