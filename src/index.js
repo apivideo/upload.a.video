@@ -78,6 +78,7 @@ app.post('/webhook',(req,res) =>{
 			//year month date
 			webhookEmitted = webhookEmitted.slice(0,7);
 			webhookDate = Date.parse(webhookEmitted);
+			console.log( Date.now, webhookDate);
 			if(Date.now - webhookDate >86000000){
 				//this webhook is over a day old.
 				webhooks.splice(i);
