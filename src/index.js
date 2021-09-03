@@ -94,7 +94,7 @@ app.post('/webhook',(req,res) =>{
 				//this is a recent webhook
 				console.log("two videoIds " +webhooks[i].videoId + " " + videoId )
 				console.log("two qualties " +webhooks[i].quality + " " + videoQuality )
-				if(webhooks[i].videoId == videoId && webhooks[i].quality == videoQuality){
+				if(webhooks[i].videoId === videoId && webhooks[i].quality === videoQuality){
 					//we have a match!!
 					foundMatch = true;
 					res.sendStatus(200); 				
