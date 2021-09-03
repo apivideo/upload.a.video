@@ -103,7 +103,12 @@ app.post('/webhook',(req,res) =>{
 })
 
 var webhooks = [];
-
+webhookResponse = {"event":"intro", 
+			"emittedAt": Date.now, 
+			"videoId":"12345",
+			"encoding":"hls",
+			"quality": "200"
+			}
 //receive a webhook that encoding is ready
 app.post("/receive_webhook", function (request, response) {
 	console.log("new video event from api.video");
