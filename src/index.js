@@ -5,7 +5,8 @@ const express = require('express');
 const app = express();
 bodyParser = require('body-parser');
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+//app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.text({ type: "text/plain" }));
 app.set('view engine','pug');
 app.use(express.static('public'));
 app.use(express.json());
@@ -49,11 +50,101 @@ const apiVideo = require('@api.video/nodejs-sdk');
 //if you chnage the key to sandbox or prod - make sure you fix the delegated toekn on the upload page
 const apiVideoKey = process.env.apiProductionKey;
 
+
+//this applies the ratelimit to all uploads.  Limit to 5 per hour
 app.get('/ratelimit',(req,res)=>{
 	console.log("rate limiting test");
 	res.sendStatus(200);
 });
 
+
+app.post('/webhook',(req,res) =>{
+	console.log("body" ,req.body);
+	var reqBody = JSON.parse(req.body);
+	console.log("reqBody",reqBody);
+	//video uploaded -but check to see if the 
+	var videoId = reqBody.videoId;
+	var videoQuality  = reqBody.quality;
+	console.log("received  " + videoId + " " +videoQuality);
+	//we need to see if this videoId and qulity have been encoded.
+	//loop through all the webhook responses
+	
+	function checkWebhook(videoId, videoQuality, webhooks){
+		console.log("there are " + webhooks.length + " webhook entries to scan");
+		for(var i=0;i<webhooks.length;i++){
+			var webhookEmitted = webhooks[i].emittedAt;
+			//convert this to a date
+			//2021-01-29T16:46:25.217+01:00
+			//year month date
+			webhookEmitted = webhookEmitted.slice(0,7);
+			webhookDate = Date.parse(webhookEmitted);
+			if(Date.now - webhookDate >86000000){
+				//this webhook is over a day old.
+				webhooks.splice(i);
+			}
+			else{
+				//this is a recent webhook
+				if(webhooks[i].videoId == videoId && webhooks[i].quality == videoQuality){
+					//we have a match!!
+					res.sendStatus(200); 				
+
+				}
+				else{
+					//not encoded yet, wait 2 sec and re-reun checkMp4
+					console.log("no webhook yet.");
+					setTimeout(checkWebhook,2000,videoId, videoQuality, webhooks);
+				}
+			}
+		}
+	}
+	checkWebhook(videoId, videoQuality, webhooks);
+
+})
+
+var webhooks = [];
+
+//receive a webhook that encoding is ready
+app.post("/receive_webhook", function (request, response) {
+	console.log("new video event from api.video");
+  
+  
+	webhooks.push("New api.video event");
+	let event = request.body;
+	let body =request.body;
+	console.log((body));
+	 let headers = request.headers;
+	console.log("headers",headers);
+	let type = body.type;
+	let emittedAt = body.emittedAt;
+	let webhookResponse="";
+	let liveStreamId = "";
+	let liveStreamStatus = false;
+	//we're only getting video.encoding.quality.completed right now.. but let's be careful in case the webhook changes
+
+	if (type =="video.encoding.quality.completed"){
+	  let videoId = body.videoId;
+	  let encoding = body.encoding;
+	  let quality = body.quality;
+	  liveStreamId = body.liveStreamId;
+	  webhookResponse = {"event":type, 
+	  					"emittedAt": emittedAt, 
+						"videoId":videoId,
+						"encoding":encoding,
+						"quality": quality
+						}
+	  
+	} 
+  
+	//console.log(headers);
+	console.log("response",webhookResponse);
+	//webhook url
+  
+
+	webhooks.push(webhookResponse);
+	
+	response.sendStatus(200);  
+  });
+//end webhook  
 
 // website demo
 //get request is the initial request - load the HTML page with the form
@@ -61,12 +152,6 @@ app.get('/toDiscord', (req, res) => {
 
 		res.sendFile(path.join(__dirname, '../public', 'index.html'));  
 });
-
-
-
-
-
-
 
 app.post('/toDiscord', (req, res) => {
 	console.log(req.body);
@@ -78,14 +163,7 @@ app.post('/toDiscord', (req, res) => {
 	let videoDesc = req.body.videoDesc;
 	let discordChannel = req.body.channel;
 	let tag = "Discord";
-	
-
-	
-
 	client = new apiVideo.Client({ apiKey: apiVideoKey});
-	
-	
-
 	let result = client.videos.update(videoId, {	title: videoName, 
 													description: videoDesc,					
 													tags: [tag]

@@ -1,0 +1,143 @@
+<html>
+<head>
+	<title>Upload a video</title>
+	<link rel="stylesheet" href="style.css">
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-N9E9YP1HGF"></script>
+	<script src="https://unpkg.com/@api.video/video-uploader" defer></script>
+	<script>
+  		window.dataLayer = window.dataLayer || [];
+  		function gtag(){dataLayer.push(arguments);}
+  		gtag('js', new Date());
+  		gtag('config', 'G-N9E9YP1HGF');
+	</script>
+</head>
+
+<body>
+	<p id="title">
+		Upload a video to api.video with our JavaScript Library.
+
+		We'll provide the playback URL when the selected version has been encoded.
+	</p>
+	<br>
+	<div id="action__upload">
+	
+		<img id="uploadFile__icon" draggable="false" src = "upload.png">
+		<br/>
+		<label for="video-quality" id="video-quality-label">
+			Which quality would you like to have encoded before allowing playback?
+		</label>
+		<select id="video-quality" >
+			<option value="240">240p</option>
+			<option value="360">360p</option>
+			<option value="480">480p</option>
+			<option value="720" selected>720p</option>
+			<option value="1080">1080p</option>
+		</select>
+		<label for="video-file" id="video-file-label">
+			Click here to upload a video
+		</label>
+		<input type="file" id="video-file" style='display:none'>
+
+	</div>
+	<br>	
+	<br>
+	<div id="video-information" style="width: 50%"></div>
+	<div id="chunk-information" style="width: 50%"></div>
+	<div id="description">
+		Quickly upload *any* size video to <a href='https://api.video'>api.video</a> using a delegated token. Upon upload, you'll have a link that can be used for sharing.
+
+	</div>
+	<div id="footer">
+		This app was created with <a href="https://api.video">api.video</a>.<br/>
+		Get the <a href="https://github.com/apivideo/uploadavideoApps">sample code (JS.html)</a>, and read about <a href="https://a.video/works/new-video-uploader-javascript-library">how we built the demo.</a><br/>
+		More sample apps can be found at <a href="https://a.video">a.video</a>.
+
+	</div>
+	
+	
+	<script>
+	  const input = document.querySelector('#video-file');
+	  
+	  var videoId = "";
+	  var playerUrl = "";
+	  input.addEventListener('change', () => {
+		console.log("upload commencing");
+
+		//get quality for the alerting
+		var videoQuality = document.getElementById('video-quality').value;
+		console.log('selected video quality',videoQuality);
+
+		//adding in rate limiting to prevent abuse
+		var qReq = new XMLHttpRequest();
+		qReq.open("GET", "/ratelimit");
+		qReq.onload = function (oEvent) {
+
+			console.log(qReq.status);
+				//once we create the video id do stuff
+				if(qReq.status == 429){
+					//rate limited
+					document.getElementById("chunk-information").innerHTML = "Your uploads have been rate limited. We allow 5 uploads/hour with this demo app. Please try again in a bit."
+				}
+				else{
+					//upload the first chunk to get the videoId
+					//its ok to upload the video, we are not rate limited
+					uploadFile(input.files[0]);
+		
+				}
+		}
+		qReq.send();
+
+
+		
+		function uploadFile(files) {
+			const uploader = new VideoUploader({
+				file: input.files[0],
+				//changed to sandbox, becuase we cannot have nice things
+				uploadToken: "toiFZZvCtxqj5z6qCa2O1mU",
+				chunkSize: 1024*1024*10, // 10MB
+				retries: 10
+		    });
+			uploader.onProgress((event) => {
+				var percentComplete = Math.round(event.currentChunkUploadedBytes / event.chunksBytes * 100);
+				var totalPercentComplete = Math.round(event.uploadedBytes / event.totalBytes * 100);
+				document.getElementById("chunk-information").innerHTML = "Chunk # " + event.currentChunk + " is " + percentComplete + "% uploaded. Total uploaded: " + totalPercentComplete +"%";
+			})
+			uploader.upload()
+				.then((video) => {
+					console.log(video);
+					videoId = video.videoId;
+					playerUrl = video.assets.player;
+					//we have the video URL, but it miight not be encoded yet. We need to get the webhook confirmation
+
+					//STEP 1 tell them upload complete
+					//hack to make the math look good.  yeah. i know.
+					document.getElementById("chunk-information").innerHTML = "Last chunk"  + " is " + "100" + "% uploaded. Total uploaded: " + "100" +"%";
+					document.getElementById("video-information").innerHTML = "all uploaded! We're now waiting for the server to tell us that the encoding is ready to play." ;
+					//set 2 - start a new request for the webhook:
+					var oReq = new XMLHttpRequest();
+
+
+					oReq.open("POST", '/webhook', true);
+					var qualityJson = {"quality":videoQuality,
+										"videoId": videoId};
+					console.log(qualityJson);
+					var qualityJsonstring = JSON.stringify(qualityJson);
+					oReq.onload = function (oEvent) {
+						//encoding at selected quality is completed - tell the customer!!!
+						console.log("Video encoded! Watch here: ",playerUrl ) ;
+						document.getElementById("video-information").innerHTML = "Your Video has been encoded and is <a href=\'" + playerUrl +"\' target=\'_blank\'>ready to watch!</a>" ;
+					}
+					//send the quality value and the videoId we want to check on...
+					oReq.send(qualityJsonstring);
+
+					
+				});
+		}
+	  });
+	</script>
+
+</body>
+
+</html>
