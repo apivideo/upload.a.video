@@ -71,6 +71,8 @@ app.post('/webhook',(req,res) =>{
 	
 	function checkWebhook(videoId, videoQuality, webhooks){
 		console.log("there are " + webhooks.length + " webhook entries to scan");
+		
+		
 		for(var i=0;i<webhooks.length;i++){
 			var webhookEmitted = webhooks[i].emittedAt;
 			//convert this to a date
@@ -109,6 +111,7 @@ webhookResponse = {"event":"intro",
 			"encoding":"hls",
 			"quality": "200"
 			}
+webhooks.push(webhookResponse);
 //receive a webhook that encoding is ready
 app.post("/receive_webhook", function (request, response) {
 	console.log("new video event from api.video");
