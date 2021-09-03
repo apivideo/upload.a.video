@@ -160,7 +160,7 @@
 								//the video is fully uploaded. there will now be a url in the response
 								playerUrl = resp.assets.player;
 								console.log("all uploaded! Watch here: ",playerUrl ) ;
-								document.getElementById("video-information").innerHTML = "all uploaded! Watch the video <a href=\'" + playerUrl +"\' target=\'_blank\'>here</a>" ;
+								document.getElementById("video-information").innerHTML = "all uploaded! Watch the video <a href=\'" + playerUrl +"\' target=\'_blank\'>here</a><br/>If you get an error that the video isn't ready yet - check out <a href=\"https://upload.a.video/webhook\">upload.a.video/webhook</a>, an integration that solves this issue." ;
 							}
 							
 			  };
