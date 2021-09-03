@@ -70,6 +70,7 @@ app.post('/webhook',(req,res) =>{
 	//loop through all the webhook responses
 	
 	function checkWebhook(videoId, videoQuality, webhooks){
+		foundMatch = false;
 		console.log("there are " + webhooks.length + " webhook entries to scan");
 		
 		
@@ -93,15 +94,17 @@ app.post('/webhook',(req,res) =>{
 				//this is a recent webhook
 				if(webhooks[i].videoId == videoId && webhooks[i].quality == videoQuality){
 					//we have a match!!
+					foundMatch = true;
 					res.sendStatus(200); 				
 
 				}
-				else{
-					//not encoded yet, wait 2 sec and re-reun checkMp4
-					console.log("no webhook yet.");
-					setTimeout(checkWebhook,2000,videoId, videoQuality, webhooks);
-				}
 			//}
+		}
+		if(!foundMatch){
+			//no match yet, so wait 2 seconds and try again
+			//not encoded yet, wait 2 sec and re-reun checkMp4
+			console.log("no webhook yet.");
+			setTimeout(checkWebhook,2000,videoId, videoQuality, webhooks);
 		}
 	}
 	checkWebhook(videoId, videoQuality, webhooks);
