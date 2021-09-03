@@ -92,6 +92,8 @@ app.post('/webhook',(req,res) =>{
 			else{
 			*/
 				//this is a recent webhook
+				console.log("two videoIds " +webhooks[i].videoId + " " + videoId )
+				console.log("two qualties " +webhooks[i].quality + " " + videoQuality )
 				if(webhooks[i].videoId == videoId && webhooks[i].quality == videoQuality){
 					//we have a match!!
 					foundMatch = true;
@@ -124,12 +126,12 @@ app.post("/receive_webhook", function (request, response) {
 	console.log("new video event from api.video");
   
   
-	webhooks.push("New api.video event");
+	//webhooks.push("New api.video event");
 	let event = request.body;
 	let body =request.body;
 	console.log((body));
 	 let headers = request.headers;
-	console.log("headers",headers);
+//	console.log("headers",headers);
 	let type = body.type;
 	let emittedAt = body.emittedAt;
 	let webhookResponse="";
