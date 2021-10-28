@@ -1,12 +1,22 @@
-# uploadavideoApps
-This repo is a combination of blobUpload and videouploadtodiscord
-This is to keep all the demo applications at upload.a.video
+[![badge](https://img.shields.io/twitter/follow/api_video?style=social)](https://twitter.com/intent/follow?screen_name=api_video)
 
-the primary repositories are at:
+[![badge](https://img.shields.io/github/stars/apivideo/duetavideo?style=social)](https://github.com/apivideo/uploadavideoApps)
 
-[upload a video](https://github.com/apivideo/blobUpload)
+[![badge](https://img.shields.io/discourse/topics?server=https%3A%2F%2Fcommunity.api.video)](https://community.api.video)
 
-[upload a video to Discord](https://github.com/apivideo/videoUploadToDiscord)
+![](https://github.com/apivideo/API_OAS_file/blob/master/apivideo_banner.png)
+
+[api.video](https://api.video) provides video APIs for building, scaling and operating on-demand and live streaming videos in your app, software or platform. 
+
+## Upload a video
+
+This app utilizes a number of different ways to upload a video to [api.video](https://api.video)\
+
+* [upload.a.video](https://upload.a.video) uses a [delegated token](https://docs.api.video/reference/post_upload-tokens) t upload a video into your account.  To make this standaolne html to work with your api.video account, you'll need delegated token and the value inserted into the URL paramater on line 61 of index.html.
+
+* [upload.a.video/toDiscord](https://upload.a.video/toDiscord) is the same codebase, but in the form, you can add a Discord server ID to add the bot. There are more instructions in the [tutorial](https://api.video/blog/tutorials/upload-a-video-discord).
+
+* [upload.a.video/JS.html](https://upload.a.video/JS.html) also uses the delegated upload token, but also uses the [Javascript video uploader](https://docs.api.video/docs/video-uploader) library to further simplify the upload process.
 
 
 ## Changes
