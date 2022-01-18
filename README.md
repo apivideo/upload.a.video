@@ -23,4 +23,4 @@ This app utilizes a number of different ways to upload a video to [api.video](ht
 
 ## Changes
 
-August 2021: upload size set to 6 MB segements.
+August 2021: upload size set to 6 MB segments.
