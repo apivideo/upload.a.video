@@ -164,3 +164,9 @@ body {
 .hide {
   display: none;
 }
+
+#PlayerContainer {
+  width: 50%;
+  height: 300px;
+  margin: auto;
+}

@@ -9,6 +9,7 @@
       rel="stylesheet"
     />
     <script src="https://unpkg.com/@api.video/video-uploader" defer></script>
+    <script src="https://unpkg.com/@api.video/player-sdk" defer></script>
     <script>
       var __nspid = 'isrtzw';
       var __nsptags = [];
@@ -137,12 +138,34 @@
           />
         </div>
       </div>
+      <div id="PlayerContainer" class="hide"></div>
     </div>
 
     <script>
+      window.onload = function() {
+        const dropZone = document.querySelector('.dnd-container')
+        dropZone.addEventListener('dragover', function(event) {
+          event.preventDefault();
+        })
+        dropZone.addEventListener('drop', function(event) {
+          event.preventDefault();
+          if (event.dataTransfer.items) {
+            [...event.dataTransfer.items].forEach((item, i) => {
+              if (item.kind === 'file') {
+                const file = item.getAsFile();
+                uploadFile(file)
+              }
+            });
+          } else {
+            [...event.dataTransfer.files].forEach((file, i) => {
+              uploadFile(file)
+            });
+          }
+        })
+      }
+
       function closeNav() {
         document.getElementById('sidebar').style.width = '20';
-        console.log(document.getElementById('description'));
         document.getElementById('content').classList.add('hide');
         document.getElementById('chevron-right').classList.remove('hide');
         document.getElementById('chevron-left').classList.add('hide');
@@ -165,7 +188,6 @@
       function fileInputChange(e) {
         const { files } = e;
         if (files && files.length > 0) {
-          console.log('ze file', files[0]);
           uploadFile(files[0]);
         }
       }
@@ -173,7 +195,7 @@
       function uploadFile(file) {
         const uploader = new VideoUploader({
           file,
-          uploadToken: 'to4xfhc3LNHPgoCIVj6LIcRB',
+          uploadToken: 'to7EcLLzRSsqhkzxyIhavEHA',
         });
         uploader.upload();
         document
@@ -193,9 +215,14 @@
             document.getElementById('ingest-done').classList.remove('hide');
           }
         });
-        uploader.onPlayable(() => {
+        uploader.onPlayable((video) => {
           document.getElementById('play-spinner').classList.add('hide');
           document.getElementById('play-done').classList.remove('hide');
+          document.querySelector('.upload-container').classList.add('hide');
+          const player = new PlayerSdk("#PlayerContainer", {
+              id: video.videoId,
+          }); 
+          document.getElementById('PlayerContainer').classList.remove('hide')
         });
       }
     </script>
