@@ -187,12 +187,15 @@
         })
         dropZone.addEventListener('drop', function(event) {
           event.preventDefault();
+          error.classList.add('hide');
           if (event.dataTransfer.items) {
             [...event.dataTransfer.items].forEach((item, i) => {
-              console.log(item)
-              if (item.kind === 'file') {
+              if (item.kind === 'file' && item.type.includes('video/')) {
                 const file = item.getAsFile();
                 uploadFile(file);
+              } else {
+                error.classList.remove('hide');
+                error.innerText = 'Please, select a video file.';
               }
             });
           } else {
