@@ -8,6 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Rubik+80s+Fade&family=Rubik:wght@800&display=swap"
       rel="stylesheet"
     />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <script src="https://unpkg.com/@api.video/video-uploader" defer></script>
     <script src="https://unpkg.com/@api.video/player-sdk" defer></script>
     <script>
@@ -92,58 +93,93 @@
         src="assets/chevron-right.svg"
       />
 
-      <div class="dnd-container" onclick="openFilePicker()">
-        <div id="upload-icon">
-          <img src="assets/upload.svg" />
+      <div id="right">
+        <div class="dnd-container" onclick="openFilePicker()">
+          <div id="upload-icon">
+            <img src="assets/upload.svg" />
+          </div>
+          <div class="dnd-desktop">
+            <p>Drag and drop a video here</p>
+            <span>or <button>browse</button> to choose a file</span>
+          </div>
+          <p class="dnd-mobile">Tap here to upload a video</p>
+          <input type="file" id="file-input" accept={'video/*'} ref={inputFile}
+          name="upload" onchange="fileInputChange(this)" style="display: none"/>
         </div>
-        <p>Drag and drop a video here</p>
-        <span>or <button>browse</button> to choose a file</span>
-        <input type="file" id="file-input" accept={'video/*'} ref={inputFile}
-        name="upload" onchange="fileInputChange(this)" style="display: none"/>
+        <div class="upload-container hide">
+          <div class="upload-item">
+            <p>Uploaded</p>
+            <div id="upload-spinner" class="spinner"></div>
+            <img
+              id="upload-done"
+              src="assets/check.png"
+              class="hide"
+              height="32"
+              width="32"
+            />
+          </div>
+          <span></span>
+          <div class="upload-item">
+            <p>Ingested</p>
+            <div id="ingest-spinner" class="spinner"></div>
+            <img
+              id="ingest-done"
+              src="assets/check.png"
+              class="hide"
+              height="32"
+              width="32"
+            />
+          </div>
+          <span></span>
+          <div class="upload-item">
+            <p>Playable</p>
+            <div id="play-spinner" class="spinner"></div>
+            <img
+              id="play-done"
+              src="assets/check.png"
+              class="hide"
+              height="32"
+              width="32"
+            />
+          </div>
+        </div>
+        <div id="PlayerContainer" class="hide"></div>
+        <div id="mobile-description">
+          <h1>Upload a video</h1>
+          <div id="description">
+            <p>Some of our customer use this to build:</p>
+            <ul>
+              <li>A video on demand service like Youtube or Netflix</li>
+              <li>
+                A platform that supports user uploaded videos like Tiktok or
+                Instagram
+              </li>
+              <li>Video into a custom CMS</li>
+              <li>And more ...</li>
+            </ul>
+            <p>
+              To learn more, read the tutorial or
+              <a href="/">check out the source code on GitHub.</a>
+            </p>
+          </div>
+        </div>
       </div>
-      <div class="upload-container hide">
-        <div class="upload-item">
-          <p>Uploaded</p>
-          <div id="upload-spinner" class="spinner"></div>
-          <img
-            id="upload-done"
-            src="assets/check.png"
-            class="hide"
-            height="32"
-            width="32"
-          />
-        </div>
-        <span></span>
-        <div class="upload-item">
-          <p>Ingested</p>
-          <div id="ingest-spinner" class="spinner"></div>
-          <img
-            id="ingest-done"
-            src="assets/check.png"
-            class="hide"
-            height="32"
-            width="32"
-          />
-        </div>
-        <span></span>
-        <div class="upload-item">
-          <p>Playable</p>
-          <div id="play-spinner" class="spinner"></div>
-          <img
-            id="play-done"
-            src="assets/check.png"
-            class="hide"
-            height="32"
-            width="32"
-          />
-        </div>
-      </div>
-      <div id="PlayerContainer" class="hide"></div>
     </div>
 
     <script>
+      const sidebar = document.getElementById('sidebar');
+      const content = document.getElementById('content');
+      const chevronRight = document.getElementById('chevron-right');
+      const chevronLeft = document.getElementById('chevron-left');
+      const fullLogo = document.getElementById('full-logo');
+      const miniLogo = document.getElementById('mini-logo');
+      const uploadContainer = document.querySelector('.upload-container');
+      const dropZone = document.querySelector('.dnd-container');
+      const dndDesktop = document.querySelector('.dnd-desktop');
+      const dndMobile = document.querySelector('.dnd-mobile');
+      const right = document.getElementById('right');
+
       window.onload = function() {
-        const dropZone = document.querySelector('.dnd-container')
         dropZone.addEventListener('dragover', function(event) {
           event.preventDefault();
         })
@@ -153,32 +189,34 @@
             [...event.dataTransfer.items].forEach((item, i) => {
               if (item.kind === 'file') {
                 const file = item.getAsFile();
-                uploadFile(file)
+                uploadFile(file);
               }
             });
           } else {
             [...event.dataTransfer.files].forEach((file, i) => {
-              uploadFile(file)
+              uploadFile(file);
             });
           }
         })
       }
 
       function closeNav() {
-        document.getElementById('sidebar').style.width = '20';
-        document.getElementById('content').classList.add('hide');
-        document.getElementById('chevron-right').classList.remove('hide');
-        document.getElementById('chevron-left').classList.add('hide');
-        document.getElementById('full-logo').classList.add('hide');
-        document.getElementById('mini-logo').classList.remove('hide');
+        sidebar.style.width = '20';
+        content.classList.add('hide');
+        chevronRight.classList.remove('hide');
+        chevronLeft.classList.add('hide');
+        fullLogo.classList.add('hide');
+        miniLogo.classList.remove('hide');
+        right.style.width = '100%';
       }
 
       function openNav() {
-        document.getElementById('sidebar').style.width = '400';
-        document.getElementById('content').classList.remove('hide');
-        document.getElementById('full-logo').classList.remove('hide');
-        document.getElementById('chevron-right').classList.add('hide');
-        document.getElementById('chevron-left').classList.remove('hide');
+        sidebar.style.width = '400';
+        content.classList.remove('hide');
+        fullLogo.classList.remove('hide');
+        chevronRight.classList.add('hide');
+        chevronLeft.classList.remove('hide');
+        right.style.removeProperty('width');
       }
 
       function openFilePicker() {
@@ -198,12 +236,8 @@
           uploadToken: 'to7EcLLzRSsqhkzxyIhavEHA',
         });
         uploader.upload();
-        document
-          .getElementsByClassName('dnd-container')[0]
-          .classList.add('hide');
-        document
-          .getElementsByClassName('upload-container')[0]
-          .classList.remove('hide');
+        dropZone.classList.add('hide');
+        uploadContainer.classList.remove('hide');
         uploader.onProgress((e) => {
           let uploadProgress = Math.round(
             (e.uploadedBytes * 100) / e.totalBytes
@@ -218,7 +252,7 @@
         uploader.onPlayable((video) => {
           document.getElementById('play-spinner').classList.add('hide');
           document.getElementById('play-done').classList.remove('hide');
-          document.querySelector('.upload-container').classList.add('hide');
+          uploadContainer.classList.add('hide');
           const player = new PlayerSdk("#PlayerContainer", {
               id: video.videoId,
           }); 

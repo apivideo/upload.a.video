@@ -41,7 +41,7 @@ body {
   top: 24px;
   display: flex;
   justify-content: space-between;
-  width: 400px;
+  width: 90%;
   align-items: center;
 }
 
@@ -71,8 +71,18 @@ body {
   color: #fa4d30;
 }
 
-.dnd-container {
+#right {
+  padding: 0 10%;
   width: 50%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.dnd-container {
+  width: 100%;
   background-color: #f1f1f9;
   height: 250px;
   border: 1px dashed #eaeaea;
@@ -84,15 +94,12 @@ body {
   cursor: pointer;
   transition: border 0.4s ease-in-out;
   margin: 0 auto;
+  color: #32324d;
+  align-self: center;
 }
 
 .dnd-container:hover {
   border-color: #4642eb;
-}
-
-.dnd-container {
-  color: #32324d;
-  align-self: center;
 }
 
 .dnd-container p {
@@ -139,7 +146,7 @@ body {
   font-size: 20px;
   display: flex;
   flex-direction: column;
-  justfy-content: center;
+  justify-content: center;
   align-items: center;
 }
 
@@ -165,8 +172,53 @@ body {
   display: none;
 }
 
+.w-full {
+  width: 100vw;
+}
+
 #PlayerContainer {
-  width: 50%;
+  width: 100%;
   height: 300px;
   margin: auto;
+}
+
+@media (max-width: 929px) {
+  .dnd-desktop {
+    display: none;
+  }
+  .dnd-container {
+    margin-top: auto;
+  }
+  #mobile-description {
+    margin-top: auto;
+  }
+  #mobile-description > h1 {
+    font-size: 1.5rem;
+  }
+  #mobile-description > #description {
+    font-size: .9rem;
+  }
+  #mobile-description > #description > p {
+    margin: .8rem 0;
+  }
+  #sidebar {
+    display: none;
+  }
+  #right {
+    width: 100%;
+  }
+  #PlayerContainer {
+    height: 250px;
+  }
+  .upload-container {
+    flex-direction: column;
+  }
+}
+@media (min-width: 930px) {
+  .dnd-mobile {
+    display: none;
+  }
+  #mobile-description {
+    display: none;
+  }
 }
