@@ -182,7 +182,8 @@ body {
 
 #PlayerContainer {
   width: 100%;
-  height: 300px;
+  max-width: 600px;
+  aspect-ratio: 16/9; 
   margin: auto;
 }
 
@@ -210,9 +211,6 @@ body {
   }
   #right {
     width: 100%;
-  }
-  #PlayerContainer {
-    height: 250px;
   }
   .upload-container {
     flex-direction: column;
