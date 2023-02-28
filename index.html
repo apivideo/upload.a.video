@@ -262,6 +262,8 @@
           uploadContainer.classList.add('hide');
           const player = new PlayerSdk("#PlayerContainer", {
               id: video.videoId,
+              muted: true,
+              autoplay: true,
           }); 
           document.getElementById('PlayerContainer').classList.remove('hide')
         });

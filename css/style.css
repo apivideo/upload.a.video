@@ -8,6 +8,7 @@ body {
 
 #main {
   display: flex;
+  max-height: 100vh;
 }
 
 #sidebar {
@@ -15,7 +16,7 @@ body {
   width: 400px;
   overflow-x: hidden;
   transition: 0.3s;
-  height: 100vh;
+  max-height: 100%;
   padding: 24px;
   display: flex;
   align-items: flex-start;
@@ -43,6 +44,7 @@ body {
   justify-content: space-between;
   width: 90%;
   align-items: center;
+  left: 20px;
 }
 
 .chevron {
@@ -72,7 +74,7 @@ body {
 }
 
 #right {
-  padding: 60px 10% 60px 10%;
+  padding: 0 10%;
   width: 50%;
   height: 100vh;
   display: flex;
@@ -196,6 +198,7 @@ body {
   }
   #mobile-description {
     margin-top: auto;
+    margin-bottom: 60px;
   }
   #mobile-description > h1 {
     font-size: 1.5rem;
@@ -213,6 +216,7 @@ body {
     width: 100%;
   }
   .upload-container {
+    margin-top: 60px;
     flex-direction: column;
   }
 }
