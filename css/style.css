@@ -72,13 +72,17 @@ body {
 }
 
 #right {
-  padding: 0 10%;
+  padding: 60px 10% 60px 10%;
   width: 50%;
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+#error {
+  color: #cc0000;
 }
 
 .dnd-container {

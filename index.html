@@ -103,7 +103,7 @@
             <span>or <button>browse</button> to choose a file</span>
           </div>
           <p class="dnd-mobile">Tap here to upload a video</p>
-          <input type="file" id="file-input" accept={'video/*'} ref={inputFile}
+          <input type="file" id="file-input" accept="video/mp4,video/x-m4v,video/*" ref={inputFile}
           name="upload" onchange="fileInputChange(this)" style="display: none"/>
         </div>
         <div class="upload-container hide">
@@ -144,6 +144,7 @@
           </div>
         </div>
         <div id="PlayerContainer" class="hide"></div>
+        <p id="error" class="error"></p>
         <div id="mobile-description">
           <h1>Upload a video</h1>
           <div id="description">
@@ -178,6 +179,7 @@
       const dndDesktop = document.querySelector('.dnd-desktop');
       const dndMobile = document.querySelector('.dnd-mobile');
       const right = document.getElementById('right');
+      const error = document.getElementById('error')
 
       window.onload = function() {
         dropZone.addEventListener('dragover', function(event) {
@@ -187,6 +189,7 @@
           event.preventDefault();
           if (event.dataTransfer.items) {
             [...event.dataTransfer.items].forEach((item, i) => {
+              console.log(item)
               if (item.kind === 'file') {
                 const file = item.getAsFile();
                 uploadFile(file);
@@ -231,11 +234,15 @@
       }
 
       function uploadFile(file) {
+        error.classList.add('hide');
         const uploader = new VideoUploader({
           file,
-          uploadToken: 'YOUR_UPLOAD_TOKEN',
+          uploadToken: 'to7EcLLzRSsqhkzxyIhavEHA',
         });
-        uploader.upload();
+        uploader.upload().catch(e => {
+          error.classList.remove('hide');
+          error.innerText = e.title ?? 'An error occured. Please try again with a new video or a new upload token.';
+        });
         dropZone.classList.add('hide');
         uploadContainer.classList.remove('hide');
         uploader.onProgress((e) => {
