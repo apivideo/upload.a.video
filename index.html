@@ -1,0 +1,276 @@
+<html>
+  <head>
+    <title>Upload a video with api.video</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Rubik+80s+Fade&family=Rubik:wght@800&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <script src="https://unpkg.com/@api.video/video-uploader" defer></script>
+    <script src="https://unpkg.com/@api.video/player-sdk" defer></script>
+    <script>
+      var __nspid = 'isrtzw';
+      var __nsptags = [];
+      (function (w, d) {
+        var x = function () {
+          var j = d.createElement('script');
+          j.type = 'text/javascript';
+          j.async = true;
+          j.src =
+            'http' +
+            ('https:' === d.location.protocol ? 's://cs' : '://c') +
+            '.ns1p.net/p.js?a=' +
+            __nspid;
+          d.body.appendChild(j);
+        };
+        if (w.addEventListener) {
+          w.addEventListener('load', x, false);
+        } else if (w.attachEvent) {
+          w.attachEvent('onload', x);
+        } else {
+          w.onload = x;
+        }
+      })(window, document);
+    </script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-N9E9YP1HGF"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-N9E9YP1HGF');
+    </script>
+  </head>
+
+  <body>
+    <div id="main">
+      <div id="sidebar" class="open">
+        <div id="logo-container">
+          <img src="assets/api-video-logo.svg" id="full-logo" height="24px" />
+          <img src="assets/logo.svg" id="mini-logo" />
+          <button
+            id="chevron-left"
+            type="button"
+            class="chevron"
+            onclick="closeNav()"
+          >
+            <img src="assets/chevron-left.svg" />
+          </button>
+        </div>
+        <div id="content">
+          <h1>Upload a video</h1>
+          <div id="description">
+            <p>Some of our customer use this to build:</p>
+            <ul>
+              <li>A video on demand service like Youtube or Netflix</li>
+              <li>
+                A platform that supports user uploaded videos like Tiktok or
+                Instagram
+              </li>
+              <li>Video into a custom CMS</li>
+              <li>And more ...</li>
+            </ul>
+            <p>
+              To learn more, read the tutorial or
+              <a href="/">check out the source code on GitHub.</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <img
+        id="chevron-right"
+        class="chevron hide"
+        onclick="openNav()"
+        src="assets/chevron-right.svg"
+      />
+
+      <div id="right">
+        <div class="dnd-container" onclick="openFilePicker()">
+          <div id="upload-icon">
+            <img src="assets/upload.svg" />
+          </div>
+          <div class="dnd-desktop">
+            <p>Drag and drop a video here</p>
+            <span>or <button>browse</button> to choose a file</span>
+          </div>
+          <p class="dnd-mobile">Tap here to upload a video</p>
+          <input type="file" id="file-input" accept="video/mp4,video/x-m4v,video/*" ref={inputFile}
+          name="upload" onchange="fileInputChange(this)" style="display: none"/>
+        </div>
+        <div class="upload-container hide">
+          <div class="upload-item">
+            <p>Uploaded</p>
+            <div id="upload-spinner" class="spinner"></div>
+            <img
+              id="upload-done"
+              src="assets/check.png"
+              class="hide"
+              height="32"
+              width="32"
+            />
+          </div>
+          <span></span>
+          <div class="upload-item">
+            <p>Ingested</p>
+            <div id="ingest-spinner" class="spinner"></div>
+            <img
+              id="ingest-done"
+              src="assets/check.png"
+              class="hide"
+              height="32"
+              width="32"
+            />
+          </div>
+          <span></span>
+          <div class="upload-item">
+            <p>Playable</p>
+            <div id="play-spinner" class="spinner"></div>
+            <img
+              id="play-done"
+              src="assets/check.png"
+              class="hide"
+              height="32"
+              width="32"
+            />
+          </div>
+        </div>
+        <div id="PlayerContainer" class="hide"></div>
+        <p id="error" class="error"></p>
+        <div id="mobile-description">
+          <h1>Upload a video</h1>
+          <div id="description">
+            <p>Some of our customer use this to build:</p>
+            <ul>
+              <li>A video on demand service like Youtube or Netflix</li>
+              <li>
+                A platform that supports user uploaded videos like Tiktok or
+                Instagram
+              </li>
+              <li>Video into a custom CMS</li>
+              <li>And more ...</li>
+            </ul>
+            <p>
+              To learn more, read the tutorial or
+              <a href="/">check out the source code on GitHub.</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const sidebar = document.getElementById('sidebar');
+      const content = document.getElementById('content');
+      const chevronRight = document.getElementById('chevron-right');
+      const chevronLeft = document.getElementById('chevron-left');
+      const fullLogo = document.getElementById('full-logo');
+      const miniLogo = document.getElementById('mini-logo');
+      const uploadContainer = document.querySelector('.upload-container');
+      const dropZone = document.querySelector('.dnd-container');
+      const dndDesktop = document.querySelector('.dnd-desktop');
+      const dndMobile = document.querySelector('.dnd-mobile');
+      const right = document.getElementById('right');
+      const error = document.getElementById('error')
+
+      window.onload = function() {
+        dropZone.addEventListener('dragover', function(event) {
+          event.preventDefault();
+        })
+        dropZone.addEventListener('drop', function(event) {
+          event.preventDefault();
+          error.classList.add('hide');
+          if (event.dataTransfer.items) {
+            [...event.dataTransfer.items].forEach((item, i) => {
+              if (item.kind === 'file' && item.type.includes('video/')) {
+                const file = item.getAsFile();
+                uploadFile(file);
+              } else {
+                error.classList.remove('hide');
+                error.innerText = 'Please, select a video file.';
+              }
+            });
+          } else {
+            [...event.dataTransfer.files].forEach((file, i) => {
+              uploadFile(file);
+            });
+          }
+        })
+      }
+
+      function closeNav() {
+        sidebar.style.width = '20';
+        content.classList.add('hide');
+        chevronRight.classList.remove('hide');
+        chevronLeft.classList.add('hide');
+        fullLogo.classList.add('hide');
+        miniLogo.classList.remove('hide');
+        right.style.width = '100%';
+      }
+
+      function openNav() {
+        sidebar.style.width = '400';
+        content.classList.remove('hide');
+        fullLogo.classList.remove('hide');
+        chevronRight.classList.add('hide');
+        chevronLeft.classList.remove('hide');
+        right.style.removeProperty('width');
+      }
+
+      function openFilePicker() {
+        document.getElementById('file-input').click();
+      }
+
+      function fileInputChange(e) {
+        const { files } = e;
+        if (files && files.length > 0) {
+          uploadFile(files[0]);
+        }
+      }
+
+      function uploadFile(file) {
+        error.classList.add('hide');
+        const uploader = new VideoUploader({
+          file,
+          uploadToken: 'to7EcLLzRSsqhkzxyIhavEHA',
+        });
+        uploader.upload().catch(e => {
+          error.classList.remove('hide');
+          error.innerText = e.title ?? 'An error occured. Please try again with a new video or a new upload token.';
+        });
+        dropZone.classList.add('hide');
+        uploadContainer.classList.remove('hide');
+        uploader.onProgress((e) => {
+          let uploadProgress = Math.round(
+            (e.uploadedBytes * 100) / e.totalBytes
+          );
+          if (uploadProgress >= 100) {
+            document.getElementById('upload-spinner').classList.add('hide');
+            document.getElementById('upload-done').classList.remove('hide');
+            document.getElementById('ingest-spinner').classList.add('hide');
+            document.getElementById('ingest-done').classList.remove('hide');
+          }
+        });
+        uploader.onPlayable((video) => {
+          document.getElementById('play-spinner').classList.add('hide');
+          document.getElementById('play-done').classList.remove('hide');
+          uploadContainer.classList.add('hide');
+          const player = new PlayerSdk("#PlayerContainer", {
+              id: video.videoId,
+              muted: true,
+              autoplay: true,
+          }); 
+          document.getElementById('PlayerContainer').classList.remove('hide')
+        });
+      }
+    </script>
+  </body>
+</html>

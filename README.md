@@ -12,15 +12,4 @@
 
 ## Upload a video
 
-This app utilizes a number of different ways to upload a video to [api.video](https://api.video)\
-
-* [upload.a.video](https://upload.a.video) uses a [delegated token](https://docs.api.video/reference/post_upload-tokens) t upload a video into your account.  To make this standaolne html to work with your api.video account, you'll need delegated token and the value inserted into the URL paramater on line 61 of index.html.
-
-* [upload.a.video/toDiscord](https://upload.a.video/toDiscord) is the same codebase, but in the form, you can add a Discord server ID to add the bot. There are more instructions in the [tutorial](https://api.video/blog/tutorials/upload-a-video-discord).
-
-* [upload.a.video/JS.html](https://upload.a.video/JS.html) also uses the delegated upload token, but also uses the [Javascript video uploader](https://docs.api.video/docs/video-uploader) library to further simplify the upload process.
-
-
-## Changes
-
-August 2021: upload size set to 6 MB segments.
+[upload.a.video](https://upload.a.video) uses a [upload token](https://docs.api.video/reference/post_upload-tokens) and the [TypeScript video uploader](https://docs.api.video/docs/video-uploader) to upload a video into your account. To make this standalone html to work with your api.video account, you'll need an upload token and the value inserted into the URL paramater on line 236 of index.html.
