@@ -12,4 +12,4 @@
 
 ## Upload a video
 
-[upload.a.video](https://upload.a.video) uses a [upload token](https://docs.api.video/reference/post_upload-tokens) and the [TypeScript video uploader](https://docs.api.video/docs/video-uploader) to upload a video into your account. To make this standalone html to work with your api.video account, you'll need an upload token and the value inserted into the URL paramater on line 236 of index.html.
+[upload.a.video](https://upload.a.video) uses a [upload token](https://docs.api.video/reference/post_upload-tokens) and the [TypeScript video uploader](https://docs.api.video/docs/video-uploader) to upload a video into your account. To make this standalone html to work with your api.video account, you'll need an upload token and the value inserted into the URL paramater on line 243 of `public/index.html`.
