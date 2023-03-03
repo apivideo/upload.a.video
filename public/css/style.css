@@ -67,6 +67,7 @@ body {
 #description ul {
   margin: 0;
   line-height: 1.4;
+  padding-left: 20px;
 }
 
 #description a {
