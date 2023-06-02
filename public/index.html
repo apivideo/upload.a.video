@@ -8,28 +8,28 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Rubik+80s+Fade&family=Rubik:wght@800&display=swap"
       rel="stylesheet"
     />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <script src="https://unpkg.com/@api.video/video-uploader" defer></script>
     <script src="https://unpkg.com/@api.video/player-sdk" defer></script>
     <script>
-      var __nspid = 'isrtzw';
+      var __nspid = "isrtzw";
       var __nsptags = [];
       (function (w, d) {
         var x = function () {
-          var j = d.createElement('script');
-          j.type = 'text/javascript';
+          var j = d.createElement("script");
+          j.type = "text/javascript";
           j.async = true;
           j.src =
-            'http' +
-            ('https:' === d.location.protocol ? 's://cs' : '://c') +
-            '.ns1p.net/p.js?a=' +
+            "http" +
+            ("https:" === d.location.protocol ? "s://cs" : "://c") +
+            ".ns1p.net/p.js?a=" +
             __nspid;
           d.body.appendChild(j);
         };
         if (w.addEventListener) {
-          w.addEventListener('load', x, false);
+          w.addEventListener("load", x, false);
         } else if (w.attachEvent) {
-          w.attachEvent('onload', x);
+          w.attachEvent("onload", x);
         } else {
           w.onload = x;
         }
@@ -45,8 +45,8 @@
       function gtag() {
         dataLayer.push(arguments);
       }
-      gtag('js', new Date());
-      gtag('config', 'G-N9E9YP1HGF');
+      gtag("js", new Date());
+      gtag("config", "G-N9E9YP1HGF");
     </script>
   </head>
 
@@ -68,7 +68,7 @@
         <div id="content">
           <h1>Upload a video</h1>
           <div id="description">
-            <p>Some of our customer use this to build:</p>
+            <p>Some of our customers use this to build:</p>
             <ul>
               <li>A video on demand service like Youtube or Netflix</li>
               <li>
@@ -80,7 +80,11 @@
             </ul>
             <p>
               To learn more, read the tutorial or
-              <a target="_blank" href="https://github.com/apivideo/upload.a.video">check out the source code on GitHub.</a>
+              <a
+                target="_blank"
+                href="https://github.com/apivideo/upload.a.video"
+                >check out the source code on GitHub.</a
+              >
             </p>
           </div>
         </div>
@@ -103,8 +107,15 @@
             <span>or <button>browse</button> to choose a file</span>
           </div>
           <p class="dnd-mobile">Tap here to upload a video</p>
-          <input type="file" id="file-input" accept="video/mp4,video/x-m4v,video/*" ref={inputFile}
-          name="upload" onchange="fileInputChange(this)" style="display: none"/>
+          <input
+            type="file"
+            id="file-input"
+            accept="video/mp4,video/x-m4v,video/*"
+            ref="{inputFile}"
+            name="upload"
+            onchange="fileInputChange(this)"
+            style="display: none"
+          />
         </div>
         <div class="upload-container hide">
           <div class="upload-item">
@@ -160,7 +171,11 @@
             </ul>
             <p>
               To learn more, read the tutorial or
-              <a target="_blank" href="https://github.com/apivideo/upload.a.video">check out the source code on GitHub.</a>
+              <a
+                target="_blank"
+                href="https://github.com/apivideo/upload.a.video"
+                >check out the source code on GitHub.</a
+              >
             </p>
           </div>
         </div>
@@ -168,34 +183,34 @@
     </div>
 
     <script>
-      const sidebar = document.getElementById('sidebar');
-      const content = document.getElementById('content');
-      const chevronRight = document.getElementById('chevron-right');
-      const chevronLeft = document.getElementById('chevron-left');
-      const fullLogo = document.getElementById('full-logo');
-      const miniLogo = document.getElementById('mini-logo');
-      const uploadContainer = document.querySelector('.upload-container');
-      const dropZone = document.querySelector('.dnd-container');
-      const dndDesktop = document.querySelector('.dnd-desktop');
-      const dndMobile = document.querySelector('.dnd-mobile');
-      const right = document.getElementById('right');
-      const error = document.getElementById('error')
+      const sidebar = document.getElementById("sidebar");
+      const content = document.getElementById("content");
+      const chevronRight = document.getElementById("chevron-right");
+      const chevronLeft = document.getElementById("chevron-left");
+      const fullLogo = document.getElementById("full-logo");
+      const miniLogo = document.getElementById("mini-logo");
+      const uploadContainer = document.querySelector(".upload-container");
+      const dropZone = document.querySelector(".dnd-container");
+      const dndDesktop = document.querySelector(".dnd-desktop");
+      const dndMobile = document.querySelector(".dnd-mobile");
+      const right = document.getElementById("right");
+      const error = document.getElementById("error");
 
-      window.onload = function() {
-        dropZone.addEventListener('dragover', function(event) {
+      window.onload = function () {
+        dropZone.addEventListener("dragover", function (event) {
           event.preventDefault();
-        })
-        dropZone.addEventListener('drop', function(event) {
+        });
+        dropZone.addEventListener("drop", function (event) {
           event.preventDefault();
-          error.classList.add('hide');
+          error.classList.add("hide");
           if (event.dataTransfer.items) {
             [...event.dataTransfer.items].forEach((item, i) => {
-              if (item.kind === 'file' && item.type.includes('video/')) {
+              if (item.kind === "file" && item.type.includes("video/")) {
                 const file = item.getAsFile();
                 uploadFile(file);
               } else {
-                error.classList.remove('hide');
-                error.innerText = 'Please, select a video file.';
+                error.classList.remove("hide");
+                error.innerText = "Please, select a video file.";
               }
             });
           } else {
@@ -203,30 +218,30 @@
               uploadFile(file);
             });
           }
-        })
-      }
+        });
+      };
 
       function closeNav() {
-        sidebar.style.width = '20';
-        content.classList.add('hide');
-        chevronRight.classList.remove('hide');
-        chevronLeft.classList.add('hide');
-        fullLogo.classList.add('hide');
-        miniLogo.classList.remove('hide');
-        right.style.width = '100%';
+        sidebar.style.width = "20";
+        content.classList.add("hide");
+        chevronRight.classList.remove("hide");
+        chevronLeft.classList.add("hide");
+        fullLogo.classList.add("hide");
+        miniLogo.classList.remove("hide");
+        right.style.width = "100%";
       }
 
       function openNav() {
-        sidebar.style.width = '400';
-        content.classList.remove('hide');
-        fullLogo.classList.remove('hide');
-        chevronRight.classList.add('hide');
-        chevronLeft.classList.remove('hide');
-        right.style.removeProperty('width');
+        sidebar.style.width = "400";
+        content.classList.remove("hide");
+        fullLogo.classList.remove("hide");
+        chevronRight.classList.add("hide");
+        chevronLeft.classList.remove("hide");
+        right.style.removeProperty("width");
       }
 
       function openFilePicker() {
-        document.getElementById('file-input').click();
+        document.getElementById("file-input").click();
       }
 
       function fileInputChange(e) {
@@ -237,38 +252,40 @@
       }
 
       function uploadFile(file) {
-        error.classList.add('hide');
+        error.classList.add("hide");
         const uploader = new VideoUploader({
           file,
-          uploadToken: 'to7CYQkios3Nve87sqPtbd4J',
+          uploadToken: "to7CYQkios3Nve87sqPtbd4J",
         });
-        uploader.upload().catch(e => {
-          error.classList.remove('hide');
-          error.innerText = e.title ?? 'An error occured. Please try again with a new video or a new upload token.';
+        uploader.upload().catch((e) => {
+          error.classList.remove("hide");
+          error.innerText =
+            e.title ??
+            "An error occured. Please try again with a new video or a new upload token.";
         });
-        dropZone.classList.add('hide');
-        uploadContainer.classList.remove('hide');
+        dropZone.classList.add("hide");
+        uploadContainer.classList.remove("hide");
         uploader.onProgress((e) => {
           let uploadProgress = Math.round(
             (e.uploadedBytes * 100) / e.totalBytes
           );
           if (uploadProgress >= 100) {
-            document.getElementById('upload-spinner').classList.add('hide');
-            document.getElementById('upload-done').classList.remove('hide');
-            document.getElementById('ingest-spinner').classList.add('hide');
-            document.getElementById('ingest-done').classList.remove('hide');
+            document.getElementById("upload-spinner").classList.add("hide");
+            document.getElementById("upload-done").classList.remove("hide");
+            document.getElementById("ingest-spinner").classList.add("hide");
+            document.getElementById("ingest-done").classList.remove("hide");
           }
         });
         uploader.onPlayable((video) => {
-          document.getElementById('play-spinner').classList.add('hide');
-          document.getElementById('play-done').classList.remove('hide');
-          uploadContainer.classList.add('hide');
+          document.getElementById("play-spinner").classList.add("hide");
+          document.getElementById("play-done").classList.remove("hide");
+          uploadContainer.classList.add("hide");
           const player = new PlayerSdk("#PlayerContainer", {
-              id: video.videoId,
-              muted: true,
-              autoplay: true,
-          }); 
-          document.getElementById('PlayerContainer').classList.remove('hide')
+            id: video.videoId,
+            muted: true,
+            autoplay: true,
+          });
+          document.getElementById("PlayerContainer").classList.remove("hide");
         });
       }
     </script>
